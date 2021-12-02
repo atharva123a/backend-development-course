@@ -19,30 +19,53 @@ app.get("/", function(req, res) {
 });
 
 
+// returns utc from unix:
+function convertToUtc(unix) {
+
+  let utc = "";
+  let d = new Date(unix).toString();
+  d = d.split(' ');
+  utc += (d[0] + ", " + d[2] + " " + d[1] + " " + d[3] + " " + d[4] + " GMT")
+  return utc;
+}
+
 // your first API endpoint... 
 app.get("/api/:date", function(req, res) {
+
   const time = (req.params.date);
 
   const arr = time.split('-');
-  let unix = "", utc = "";
+  let unix, utc = "";
 
   if (arr.length > 1) {
     // conver the utc to unix:
+
     let a = arr.join('.')
-    unix = parseInt(new Date(a).getTime());
+    if (isNaN(new Date(a))) {
+      res.json({
+        "error": "Invalid Date"
+      })
+    }
+    unix = parseInt((new Date(a)).getTime())
+      ;
   }
   else {
     unix = parseInt(time)
   }
-  let d = new Date(unix).toString();
-  d = d.split(' ');
-  utc += d[0] + ", " + d[2] + " " + d[1] + " " + d[3] + " " + d[4] + " " + "GMT";
-
-
+  utc = convertToUtc(unix)
   res.json({
     "unix": unix, "utc": utc
   })
+
 });
+
+app.get('/api', (req, res) => {
+  let unix = Date.now();
+  let utc = convertToUtc(parseInt(unix));
+  res.json({
+    "unix": unix , "utc": utc
+  });
+})
 
 
 
