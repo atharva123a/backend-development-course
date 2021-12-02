@@ -31,42 +31,26 @@ function convertToUtc(unix) {
 
 // your first API endpoint... 
 app.get("/api/:date", function(req, res) {
-
-  const time = (req.params.date);
-
-  const arr = time.split('-');
-  let unix, utc = "";
-
-  if (arr.length > 1) {
-    // conver the utc to unix:
-
-    let a = arr.join('.')
-    if (isNaN(new Date(a))) {
-      res.json({
-        "error": "Invalid Date"
-      })
-    }
-    unix = parseInt((new Date(a)).getTime())
-      ;
-  }
-  else {
-    let count = 0;
-    for(let i = 0; i < arr[0].length; ++i){
-      if(arr[0][i] >= '0' && arr[0][i] <= '9'){
-        continue;
-      }
-      else{
-        res.json({
-          "error" : "Invalid Date"
-        })
-      }
-    }
-    unix = parseInt(time)
-  }
-  utc = convertToUtc(unix)
-  res.json({
-    "unix": unix, "utc": utc
-  })
+  let unix, utc;
+  let date = req.params.date;
+  let x = Date.parse(date).toString();
+  let y = new Date(parseInt(date)).getTime()
+ if(x != "NaN"){
+   unix = parseInt(new Date(date).getTime());
+ }
+ else if(y == date){
+   unix = parseInt(date);
+ }
+ else {
+   res.json({
+     "error" : "Invalid Date"
+   })
+ }
+ utc = convertToUtc(unix);
+ res.json({
+   "unix" : unix,
+   "utc" : utc
+ })
 
 });
 
