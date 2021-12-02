@@ -50,6 +50,17 @@ app.get("/api/:date", function(req, res) {
       ;
   }
   else {
+    let count = 0;
+    for(let i = 0; i < arr[0].length; ++i){
+      if(arr[0][i] >= '0' && arr[0][i] <= '9'){
+        continue;
+      }
+      else{
+        res.json({
+          "error" : "Invalid Date"
+        })
+      }
+    }
     unix = parseInt(time)
   }
   utc = convertToUtc(unix)
