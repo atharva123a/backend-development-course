@@ -20,10 +20,15 @@ app.get("/", function (req, res) {
 });
 
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
+// route for returning json:
+app.get('/api/whoami', (req, res)=>{
+  // gets and stores the ip address of the device the website is accessed from:
+  const ip = req.headers['x-forwarded-for'];
+
+  res.json({
+    "ip" : ip
+  })
+})
 
 
 
