@@ -19,7 +19,7 @@ app.get("/", function(req, res) {
 });
 
 
-// returns utc from unix:
+// returns utc from unix in the desired format:
 function convertToUtc(unix) {
 
   let utc = "";
@@ -30,18 +30,25 @@ function convertToUtc(unix) {
 }
 
 // your first API endpoint... 
-app.get("/api/:date", function(req, res) {
+app.get("/api/:date", (req, res) => {
+  // unix/utc to be returned if date string is valid:
   let unix, utc;
   let date = req.params.date;
+
+  // x returns Invalid Date if the string is invalid:
   let x = Date.parse(date).toString();
+  // y returns NaN if the date int is invalid else returns unix itself:
   let y = new Date(parseInt(date)).getTime()
  if(x != "NaN"){
+
+    // passing an int to convert it to utc:
    unix = parseInt(new Date(date).getTime());
  }
  else if(y == date){
    unix = parseInt(date);
  }
  else {
+   // handles all corner cases:
    res.json({
      "error" : "Invalid Date"
    })
@@ -54,6 +61,7 @@ app.get("/api/:date", function(req, res) {
 
 });
 
+// handles empty routes by returning the current date 
 app.get('/api', (req, res) => {
   let unix = Date.now();
   let utc = convertToUtc(parseInt(unix));
