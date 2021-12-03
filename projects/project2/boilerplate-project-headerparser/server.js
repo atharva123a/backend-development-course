@@ -21,12 +21,21 @@ app.get("/", function (req, res) {
 
 
 // route for returning json:
-app.get('/api/whoami', (req, res)=>{
-  // gets and stores the ip address of the device the website is accessed from:
-  const ip = req.headers['x-forwarded-for'];
+app.get('/api/whoami', async(req, res)=>{
+  // returns the current ip of the client:
+  const ip = req.ip;
+
+  // returns the languages accepted by the client:
+  const language = req.headers["accept-language"];
+
+
+  // returns the softwares compatible:
+  const software = req.headers["user-agent"];
 
   res.json({
-    "ip" : ip
+    "ip" : ip,
+    "language" : language,
+    "software" : software
   })
 })
 
