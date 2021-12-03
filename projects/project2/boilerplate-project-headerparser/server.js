@@ -33,7 +33,7 @@ app.get('/api/whoami', async(req, res)=>{
   const software = req.headers["user-agent"];
 
   res.json({
-    "ip" : ip,
+    "ipaddress" : ip,
     "language" : language,
     "software" : software
   })
