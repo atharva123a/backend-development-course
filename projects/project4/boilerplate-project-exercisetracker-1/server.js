@@ -50,7 +50,7 @@ app.post('/api/users', async (req, res, next) => {
   })
 })
 
-
+// get all users:
 app.get('/api/users', async(req, res, next)=>{  
 
 
@@ -71,23 +71,27 @@ app.get('/api/users', async(req, res, next)=>{
 
 })
 
+
+// impor the addAndSaveLog function:
 const addAndSaveLog = require('./myApp.js').addAndSaveLog;
 
-
+// accept post requests
 app.post('/api/users/:_id/exercises', async(req, res, next)=>{
   // get all the parameters required in the log:
   let description = req.body.description;
   let duration = parseInt(req.body.duration);
   let date = req.body.date;
-  
+  date = new Date(date);
   // check if user has entered date or not:
-  if(date == ''){
+  if(date == 'Invalid Date'){
     // if not return the current date and time in human readable format toDateString();
     date = (new Date()).toDateString();
   }
   else {
     // else use the original date and convert it to a string:
-    date = (new Date(date)).toDateString()
+    // console.log(typeof(date));
+    date = date.toDateString();
+    // console.log(typeof(date));
   }
   // for passing into the database:
   const obj = {
@@ -102,6 +106,21 @@ app.post('/api/users/:_id/exercises', async(req, res, next)=>{
     // return object which is in the required format:
     res.json(data);
   })
+})
+
+//handle requests to get logs:
+app.get("/api/users/:_id/logs", async(req,res,next)=>{
+  
+  // get the user:
+  const user = await User.findById(req.params._id).exec();
+  
+  res.json({
+    "_id" : user._id,
+    "username" : user.username,
+    "count" : user.log.length,
+    "log" : user.log
+  })
+
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {
