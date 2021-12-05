@@ -58,6 +58,7 @@ const createAndSaveUser = async (name, done) => {
   })
 };
 
+// for saving an exercise log in mongodb:
 const addAndSaveLog = async (_id, obj, done) => {
   
   // get the user using id:
@@ -76,7 +77,7 @@ const addAndSaveLog = async (_id, obj, done) => {
   const returnObj = {
     "_id": user._id,
     "username": user.username,
-    "date" : obj.date,
+    "date" : (obj.date).toString(),
     "duration" : obj.duration,
     "description": obj.description
   }
