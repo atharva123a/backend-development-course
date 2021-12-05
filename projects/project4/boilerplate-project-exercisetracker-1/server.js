@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 
 // for parsing url data:
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
 
 try {
   mongoose = require("mongoose");
@@ -68,6 +69,39 @@ app.get('/api/users', async(req, res, next)=>{
       res.json(userArr);
     })
 
+})
+
+const addAndSaveLog = require('./myApp.js').addAndSaveLog;
+
+
+app.post('/api/users/:_id/exercises', async(req, res, next)=>{
+  // get all the parameters required in the log:
+  let description = req.body.description;
+  let duration = parseInt(req.body.duration);
+  let date = req.body.date;
+  
+  // check if user has entered date or not:
+  if(date == ''){
+    // if not return the current date and time in human readable format toDateString();
+    date = (new Date()).toDateString();
+  }
+  else {
+    // else use the original date and convert it to a string:
+    date = (new Date(date)).toDateString()
+  }
+  // for passing into the database:
+  const obj = {
+    "description" : description,
+    "duration" : duration,
+    "date" : date
+  }
+  // this will save the log to our database:
+  await addAndSaveLog(req.params._id, obj, (err, data)=>{
+    if(err)return console.log(err);
+    
+    // return object which is in the required format:
+    res.json(data);
+  })
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {
